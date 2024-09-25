@@ -1,8 +1,9 @@
-const BrandModel = require("./models/Brand");
-const CategoryModel = require("./models/Category");
-const ProductSliderModel = require("./models/ProductSlider");
-const ProductModel = require("./models/Product");
-const ReviewModel = require("./models/Review");
+const BrandModel = require("../models/BrandModel");
+const CategoryModel = require("../models/CategoryModel");
+const ProductSliderModel = require("../models/ProductSliderModel");
+const ProductModel = require("../models/ProductModel");
+const ReviewModel = require("../models/ReviewModel");
+const mongoose = require('mongoose')
 
 const ObjectId = mongoose.Types.ObjectId
 
