@@ -1,4 +1,4 @@
-const {BrandListService, CategoryService, SliderListService, ProductListByBrandService, ProductListByCategoryService, ProductListByRemarkService, ProductDetailsService, CreateReviewService, ReviewListService} = require('../services/ProductServices');
+const {BrandListService, CategoryListService, SliderListService, ProductListByBrandService, ProductListByCategoryService, ProductListByRemarkService, ProductDetailsService, CreateReviewService, ReviewListService} = require('../services/ProductServices');
 
 exports.ProductBrandList = async (req, res) => {
     try {
@@ -12,6 +12,15 @@ exports.ProductBrandList = async (req, res) => {
 exports.ProductListByCategory = async (req, res) => {
     try {
         let result = await ProductListByCategoryService();
+        res.status(200).send(result);
+    } catch (e) {
+        res.status(500).send(e.toString());
+    }
+}
+
+exports.CategoryList = async (req, res) => {
+    try {
+        let result = await CategoryListService();
         res.status(200).send(result);
     } catch (e) {
         res.status(500).send(e.toString());

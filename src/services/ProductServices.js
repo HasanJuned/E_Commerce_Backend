@@ -16,7 +16,7 @@ const BrandListService = async () => {
     }
 }
 
-const CategoryService = async () => {
+const CategoryListService = async () => {
     try {
         let data = await CategoryModel.find()
         return {status: 'success', data: data}
@@ -224,7 +224,7 @@ const ReviewListService = async (req) => {
 
 module.exports = {
     BrandListService,
-    CategoryService,
+    CategoryListService,
     SliderListService,
     ProductListByBrandService,
     ProductListByRemarkService,
