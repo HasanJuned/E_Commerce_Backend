@@ -11,7 +11,7 @@ exports.ProductBrandList = async (req, res) => {
 
 exports.ProductListByCategory = async (req, res) => {
     try {
-        let result = await ProductListByCategoryService();
+        let result = await ProductListByCategoryService(req);
         res.status(200).send(result);
     } catch (e) {
         res.status(500).send(e.toString());

@@ -43,22 +43,22 @@ const ProductListByBrandService = async (req) => {
     try {
         let BrandId = new ObjectId(req.params.BrandId);
         let MatchStage = {$match: {brandId: BrandId}};
-        let JoinWithMatchStage = {$lookup: {from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'}};
+        let JoinWithBrandStage = {$lookup: {from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'}};
 
         let JoinWithCategoryStage = {
             $lookup: {
-                from: 'category', localField: 'categoryId', foreignField: '_id', as: 'category'
+                from: 'categories', localField: 'categoryId', foreignField: '_id', as: 'category'
             }
         };
 
-        let UnwindBrandStage = {$unwind: 'brand'}; /// arraywise hobe na
-        let UnwindCategoryStage = {$unwind: 'category'};
+        let UnwindBrandStage = {$unwind: '$brand'}; /// arraywise hobe na
+        let UnwindCategoryStage = {$unwind: '$category'};
 
         let ProjectionStage = {$project: {'brandId': 0, 'categoryId': 0, 'brand.id': 0, 'category.id': 0}}; // egula json output ey hidden takbe
 
-        let data = await ProductModel.aggregate([MatchStage, JoinWithMatchStage, JoinWithCategoryStage, UnwindBrandStage, UnwindCategoryStage, ProjectionStage,
+        let data = await ProductModel.aggregate([MatchStage, JoinWithBrandStage, JoinWithCategoryStage, UnwindBrandStage, UnwindCategoryStage, ProjectionStage
 
-        ],)
+        ])
         return {status: 'success', data: data};
 
 
@@ -68,55 +68,50 @@ const ProductListByBrandService = async (req) => {
 }
 
 const ProductListByCategoryService = async (req) => {
-
     try {
-        let CategoryId = new ObjectId(req.params.CategoryId);
-        let MatchStage = {$match: {categoryId: CategoryId}};
-        let JoinWithMatchStage = {$lookup: {from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'}};
+        let CategoryID = new ObjectId(req.params.CategoryId);
+        let MatchStage = { $match: { categoryID: CategoryID } };
 
-        let JoinWithCategoryStage = {
-            $lookup: {
-                from: 'category', localField: 'categoryId', foreignField: '_id', as: 'category'
-            }
-        };
+        let JoinWithBrandStage = { $lookup: { from: "brands", localField: "brandId", foreignField: "_id", as: "brand" } };
+        let JoinWithCategoryStage = { $lookup: { from: "categories", localField: "categoryId", foreignField: "_id", as: "category" } };
+        let UnwindBrandStage = { $unwind: "$brand" };
+        let UnwindCategoryStage = { $unwind: "$category" };
+        let ProjectionStage = { $project: { 'categoryId': 0, 'brandId': 0 } };
 
-        let UnwindBrandStage = {$unwind: 'brand'}; /// arraywise hobe na
-        let UnwindCategoryStage = {$unwind: 'category'};
-
-        let ProjectionStage = {$project: {'brandId': 0, 'categoryId': 0, 'brand.id': 0, 'category.id': 0}}; // egula json output ey hidden takbe
-
-        let data = await ProductModel.aggregate([MatchStage, JoinWithMatchStage, JoinWithCategoryStage, UnwindBrandStage, UnwindCategoryStage, ProjectionStage,
-
-        ],)
-        return {status: 'success', data: data};
-
+        let data = await ProductModel.aggregate([
+            MatchStage, JoinWithBrandStage, JoinWithCategoryStage,
+            UnwindBrandStage, UnwindCategoryStage, ProjectionStage
+        ]);
+        return { status: "success", data: data };
 
     } catch (e) {
-        return {status: 'fail', data: e}.toString()
+        return { status: 'fail', data: e.toString()};
     }
-}
+};
 
 const ProductListByRemarkService = async (req) => {
 
     try {
-        let Remark = req.params.Remark;
+        let Remark = req.params.remark;
         let MatchStage = {$match: {remark: Remark}};
-        let JoinWithMatchStage = {$lookup: {from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'}};
 
+        let JoinWithBrandStage = {$lookup: {from: 'brands', localField: 'brandId', foreignField: '_id', as: 'brand'}};
         let JoinWithCategoryStage = {
             $lookup: {
-                from: 'category', localField: 'categoryId', foreignField: '_id', as: 'category'
+                from: 'categories', localField: 'categoryId', foreignField: '_id', as: 'category'
             }
         };
 
-        let UnwindBrandStage = {$unwind: 'brand'}; /// arraywise hobe na
-        let UnwindCategoryStage = {$unwind: 'category'};
+        let UnwindBrandStage = {$unwind: '$brand'}; /// arraywise hobe na
+        let UnwindCategoryStage = {$unwind: '$category'};
 
         let ProjectionStage = {$project: {'brandId': 0, 'categoryId': 0, 'brand.id': 0, 'category.id': 0}}; // egula json output ey hidden takbe
 
-        let data = await ProductModel.aggregate([MatchStage, JoinWithMatchStage, JoinWithCategoryStage, UnwindBrandStage, UnwindCategoryStage, ProjectionStage,
+        console.log('hi')
+        let data = await ProductModel.aggregate([MatchStage, JoinWithBrandStage, JoinWithCategoryStage, UnwindBrandStage, UnwindCategoryStage, ProjectionStage,
 
         ],)
+        console.log(data)
         return {status: 'success', data: data};
 
 
@@ -141,7 +136,7 @@ const ProductDetailsService = async (req) => {
         };
         let JoinWithDetailsStage = {
             $lookup: {
-                from: 'productDetails',
+                from: 'productdetails',
                 localField: '_id',
                 foreignField: 'productId',
                 as: 'details'
@@ -152,7 +147,7 @@ const ProductDetailsService = async (req) => {
         let UnwindCategoryStage = {$unwind: '$category'};
         let UnwindDetailsStage = {$unwind: "$details"}
 
-        let ProjectionStage = {$project: {'brand._id': 0, 'category._id': 0, 'categoryID': 0, 'brandID': 0}}
+       // let ProjectionStage = {$project: {'brand._id': 1, 'category._id': 0, 'categoryID': 0, 'brandID': 0}}
 
         let data = await ProductModel.aggregate([
             MatchStage,

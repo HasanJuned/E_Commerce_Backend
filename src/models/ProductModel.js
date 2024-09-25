@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const DataSchema = mongoose.Schema({
     categoryId: {type: mongoose.Schema.Types.ObjectId, required: true},
-    brandID: {type: mongoose.Schema.Types.ObjectId, required: true},
+    brandId: {type: mongoose.Schema.Types.ObjectId, required: true},
     title: {type: String, required: true},
     shortDescription: {type: String, required: true},
     price: {type: String, required: true},
