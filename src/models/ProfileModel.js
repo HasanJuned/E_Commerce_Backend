@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const DataSchema = mongoose.Schema({
-    usersID: {type: mongoose.Schema.Types.ObjectId, required: true},
+    userId: {type: mongoose.Schema.Types.ObjectId, required: true},
     cus_add: {type: String},
     cus_city: {type: String},
     cus_country: {type: String},
