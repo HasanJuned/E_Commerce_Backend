@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ProductController = require("../controllers/ProductController");
 const UserController = require("../controllers/UserController");
+const WishListController = require("../controllers/WishListController");
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 
 // Product
@@ -22,6 +23,9 @@ router.post('/CreateProfile', AuthMiddleware,UserController.CreateProfile);
 router.post('/UpdateProfile', AuthMiddleware,UserController.UpdateProfile);
 router.get('/ReadProfile', AuthMiddleware, UserController.ReadProfile);
 
-
+// wish list
+router.post('/SaveWishList', AuthMiddleware,WishListController.SaveWishList);
+router.post('/RemoveWishList', AuthMiddleware,WishListController.RemoveWishList);
+router.get('/WishList', AuthMiddleware,WishListController.WishList);
 
 module.exports = router;
