@@ -1,9 +1,10 @@
-const WishListModel = require('../models/WishModel');
+const CartListModel = require('../models/CartModel');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
-const WishListServices = async (req) => {
+const CartListService = async (req) => {
   try {
+
     let userId = new ObjectId(req.headers.userId);
     let matchStage = {$match: {userId: userId}};
 
@@ -25,7 +26,7 @@ const WishListServices = async (req) => {
         as: 'brand',
       },
     };
-    let unwindBrandStage = {$unwind: '$brand'};
+    let unwindBrand = {$unwind: '$brand'};
 
     let JoinStageCategory = {
       $lookup: {
@@ -51,17 +52,17 @@ const WishListServices = async (req) => {
       },
     };
 
-    let data = await WishListModel.aggregate([
+    let data = await CartListModel.aggregate([
       matchStage,
       JoinStageProduct,
       unwindProductStage,
       JoinStageBrand,
-      unwindBrandStage,
+      unwindBrand,
       JoinStageCategory,
       unwindCategory,
       projectionStage,
-
     ]);
+
     return {status: 'success', data: data};
 
   } catch (e) {
@@ -69,28 +70,46 @@ const WishListServices = async (req) => {
   }
 };
 
-const SaveWishListService = async (req) => {
+const CreateCartListService = async (req) => {
+
   try {
+
     let userId = req.headers.userId;
     let reqBody = req.body;
     reqBody.userId = userId;
 
-    await WishListModel.updateOne(reqBody, {$set: reqBody}, {upsert: true});
-    return {status: 'success', message: 'Wishlist Saved'};
+    await CartListModel.create(reqBody);
+    return {status: 'success', message: 'Added to Cart'};
+
+  } catch (e) {
+    return {status: 'fail', message: e.message};
+  }
+
+};
+
+const UpdateCartListService = async (req) => {
+  try {
+    let userId = req.headers.userId;
+    let cartId = req.params.cartId;
+    let reqBody = req.body;
+
+    await CartListModel.updateOne({_id: cartId, userId: userId},
+        {$set: reqBody});
+    return {status: 'success', message: 'Updated'};
 
   } catch (e) {
     return {status: 'fail', message: e.message};
   }
 };
 
-const RemoveWishListService = async (req) => {
+const RemoveCartListService = async (req) => {
   try {
     let userId = req.headers.userId;
     let reqBody = req.body;
     reqBody.userId = userId;
 
-    await WishListModel.deleteOne(reqBody);
-    return {status: 'success', message: 'Wishlist Removed'};
+    await CartListModel.deleteOne(reqBody);
+    return {status: 'success', message: 'Removed'};
 
   } catch (e) {
     return {status: 'fail', message: e.message};
@@ -98,7 +117,11 @@ const RemoveWishListService = async (req) => {
 };
 
 module.exports = {
-  WishListServices,
-  SaveWishListService,
-  RemoveWishListService,
+  CreateCartListService,
+  UpdateCartListService,
+  RemoveCartListService,
+  CartListService
 };
+
+
+
