@@ -62,13 +62,13 @@ const CreateInvoiceService = async (req) => {
     vat: vat,
   });
 
-  let invoice_id = createInvoice['_id'];
+  let invoiceId = createInvoice['_id'];
 
   CartProducts.forEach(async (product) => {
     await InvoiceProductModel.create({
       userId: userId,
       productId: product.productId,
-      invoice_id: invoice_id,
+      invoiceId: invoiceId,
       qty: product.qty,
       price: product['product']['discount']
           ? product['product']['discountPrice']

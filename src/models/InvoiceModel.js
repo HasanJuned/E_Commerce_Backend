@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const DataSchema = mongoose.Schema({
-        userID: {type: mongoose.Schema.Types.ObjectId, required: true},
+        userId: {type: mongoose.Schema.Types.ObjectId, required: true},
         payable: {type: String, required: true},
         cus_details: {type: String, required: true},
         ship_details: {type: String, required: true},
